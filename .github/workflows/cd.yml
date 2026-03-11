@@ -44,8 +44,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
-          push: true
-          no-cache: true 
+          push: true 
           tags: |
             ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:${{ env.IMAGE_TAG }}
             ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:latest
@@ -56,8 +55,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
-          push: true
-          no-cache: true 
+          push: true 
           tags: |
             ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}:${{ env.IMAGE_TAG }}
             ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}:latest
