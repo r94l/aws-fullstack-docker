@@ -103,8 +103,8 @@ jobs:
           context: ./backend
           push: false       # CI only builds, does not push
           tags: conduit-backend:ci
-          cache-from: type=gbc,scope=backend
-          cache-to: type=gbc,mode=max,scope=backend
+          cache-from: type=gha,scope=backend
+          cache-to: type=gha,mode=max,scope=backend
 
       - name: Build frontend image
         uses: docker/build-push-action@v5
@@ -112,5 +112,5 @@ jobs:
           context: ./frontend
           push: false       # CI only builds, does not push
           tags: conduit-frontend:ci
-          cache-from: type=gbc,scope=frontend
-          cache-to: type=gbc,mode=max,scope=frontend
+          cache-from: type=gba,scope=frontend
+          cache-to: type=gba,mode=max,scope=frontend
