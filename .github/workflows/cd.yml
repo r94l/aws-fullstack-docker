@@ -1,17 +1,19 @@
 name: CD Pipeline
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI Pipeline"]   # exact name from your ci.yml
+    types:
+      - completed
     branches:
-      - main      # only triggers when PR is merged to main
+      - main
 
 jobs:
-  # ─────────────────────────────────────────
-  # Job 1 — Build and Push Images to ECR
-  # ─────────────────────────────────────────
   build-and-push:
     name: Build and Push to ECR
     runs-on: ubuntu-latest
+    # Only run if CI passed, not if it failed
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
