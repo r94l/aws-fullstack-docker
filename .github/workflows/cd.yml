@@ -83,7 +83,7 @@ jobs:
           envs: IMAGE_TAG,ECR_REGISTRY,ECR_REPOSITORY_FRONTEND,ECR_REPOSITORY_BACKEND,AWS_REGION
           script: |
             # Navigate to project directory
-            cd /home/ubuntu/conduit-devops
+            cd /home/ubuntu/conduit-devops/aws-fullstack-docker
 
             # Pull latest code (docker-compose.yml and scripts)
             git pull origin main
