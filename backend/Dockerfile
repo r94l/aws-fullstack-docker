@@ -1,7 +1,7 @@
 # ─────────────────────────────────────────
 # Stage 1: Base
 # ─────────────────────────────────────────
-FROM node:18-alpine AS base
+FROM node:18-slim AS base
 
 WORKDIR /app
 
@@ -15,7 +15,6 @@ FROM base AS deps
 
 RUN npm ci --only=production
 
-# Generate Prisma client in production deps
 RUN npx prisma generate --schema=src/prisma/schema.prisma
 
 # ─────────────────────────────────────────
@@ -25,30 +24,28 @@ FROM base AS builder
 
 RUN npm ci
 
-# Generate Prisma client
 RUN npx prisma generate --schema=src/prisma/schema.prisma
 
 COPY . .
 
-# Build the app with NX
 RUN npx nx build api --configuration=production
 
 # ─────────────────────────────────────────
 # Stage 4: Production
 # ─────────────────────────────────────────
-FROM node:18-alpine AS production
+FROM node:18-slim AS production
 
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Install OpenSSL for Prisma
+RUN apt-get update -y && \
+    apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 
 WORKDIR /app
 
-# Copy production dependencies WITH generated prisma client
 COPY --from=deps /app/node_modules ./node_modules
-
-# Copy built app from builder
 COPY --from=builder /app/dist/api ./dist/api
-
-# Copy prisma schema for migrations
 COPY --from=builder /app/src/prisma ./src/prisma
 
 RUN chown -R appuser:appgroup /app
