@@ -1,5 +1,7 @@
 services:
+  # ─────────────────────────────────────────
   # Nginx Reverse Proxy
+  # ─────────────────────────────────────────
   nginx:
     image: nginx:alpine
     container_name: conduit_nginx
@@ -16,7 +18,9 @@ services:
     networks:
       - conduit_network
 
+  # ─────────────────────────────────────────
   # Frontend — React App
+  # ─────────────────────────────────────────
   frontend:
     image: ${ECR_REGISTRY}/${ECR_REPOSITORY_FRONTEND}:${IMAGE_TAG}
     container_name: conduit_frontend
@@ -41,7 +45,9 @@ services:
     networks:
       - conduit_network
 
+  # ─────────────────────────────────────────
   # Backend — Node.js API
+  # ─────────────────────────────────────────
   backend:
     image: ${ECR_REGISTRY}/${ECR_REPOSITORY_BACKEND}:${IMAGE_TAG}
     container_name: conduit_backend
@@ -54,11 +60,11 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      test: ["CMD", "node", "-e", "require('net').createConnection(3000, 'localhost').on('connect', () => process.exit(0)).on('error', () => process.exit(1))"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 40s
+      retries: 5
+      start_period: 60s
     deploy:
       resources:
         limits:
@@ -70,7 +76,9 @@ services:
     networks:
       - conduit_network
 
+  # ─────────────────────────────────────────
   # Database — PostgreSQL
+  # ─────────────────────────────────────────
   db:
     image: postgres:15-alpine
     container_name: conduit_db
@@ -98,10 +106,19 @@ services:
     networks:
       - conduit_network
 
+# ─────────────────────────────────────────
 # Named Volumes
+# ─────────────────────────────────────────
 volumes:
   postgres_data:
     driver: local
+
+# ─────────────────────────────────────────
+# Networks
+# ─────────────────────────────────────────
+networks:
+  conduit_network:
+    driver: bridge
 
 # Networks
 networks:
