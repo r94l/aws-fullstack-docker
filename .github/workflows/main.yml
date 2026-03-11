@@ -46,6 +46,12 @@ jobs:
         working-directory: backend
         run: npm ci
 
+      - name: Run Prisma migrations
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://conduit:testpassword@localhost:5432/conduit_test
+        run: npx prisma migrate deploy
+
       - name: Run backend tests
         working-directory: backend
         env:
