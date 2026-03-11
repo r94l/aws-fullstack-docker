@@ -34,6 +34,13 @@ docker compose pull
 
 echo " Images pulled successfully"
 
+echo "  Running database migrations..."
+
+# Run migrations before starting containers
+docker compose run --rm backend npx prisma migrate deploy --schema=src/prisma/schema.prisma
+
+echo "✅ Migrations complete"
+
 echo "  Starting containers..."
 
 # Start containers
