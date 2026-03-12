@@ -1,4 +1,4 @@
-# 🚀 Production-Grade Container Deployment on AWS — Without Kubernetes
+# 🚀 Production-Grade Container Deployment on AWS
 
 > **Proving that not every production workload needs Kubernetes.**
 > This project demonstrates how startups and growing teams can run secure, scalable, fully automated containerized applications on AWS using Docker Compose cutting infrastructure costs while maintaining production-grade DevOps standards
