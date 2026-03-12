@@ -1,6 +1,4 @@
-# ─────────────────────────────────────────
 # Stage 1: Base
-# ─────────────────────────────────────────
 FROM node:18-slim AS base
 
 WORKDIR /app
@@ -8,18 +6,14 @@ WORKDIR /app
 COPY package*.json ./
 COPY src/prisma ./src/prisma
 
-# ─────────────────────────────────────────
 # Stage 2: Dependencies
-# ─────────────────────────────────────────
 FROM base AS deps
 
 RUN npm ci --only=production
 
 RUN npx prisma generate --schema=src/prisma/schema.prisma
 
-# ─────────────────────────────────────────
 # Stage 3: Builder
-# ─────────────────────────────────────────
 FROM base AS builder
 
 RUN npm ci
@@ -30,9 +24,7 @@ COPY . .
 
 RUN npx nx build api --configuration=production
 
-# ─────────────────────────────────────────
 # Stage 4: Production
-# ─────────────────────────────────────────
 FROM node:18-slim AS production
 
 # Install OpenSSL for Prisma
