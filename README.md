@@ -1,10 +1,10 @@
 # 🚀 Production-Grade Container Deployment on AWS — Without Kubernetes
 
 > **Proving that not every production workload needs Kubernetes.**
-> This project demonstrates how startups and growing teams can run secure, scalable, fully automated containerised applications on AWS using Docker Compose — cutting infrastructure costs while maintaining production-grade DevOps standards
+> This project demonstrates how startups and growing teams can run secure, scalable, fully automated containerized applications on AWS using Docker Compose cutting infrastructure costs while maintaining production-grade DevOps standards
 
-[![CI Pipeline](https://img.shields.io/github/actions/workflow/status/YOURUSERNAME/conduit-devops/ci.yml?branch=main&label=CI&logo=github-actions&logoColor=white)](https://github.com/YOURUSERNAME/conduit-devops/actions)
-[![CD Pipeline](https://img.shields.io/github/actions/workflow/status/YOURUSERNAME/conduit-devops/cd.yml?branch=main&label=CD&logo=github-actions&logoColor=white)](https://github.com/YOURUSERNAME/conduit-devops/actions)
+[![CI Pipeline](https://img.shields.io/github/actions/workflow/status/r94l/aws-fullstack-devops/ci.yml?branch=main&label=CI&logo=github-actions&logoColor=white)](https://github.com/r94l/aws-fullstack-devops/actions)
+[![CD Pipeline](https://img.shields.io/github/actions/workflow/status/r94l/aws-fullstack-devops/cd.yml?branch=main&label=CD&logo=github-actions&logoColor=white)](https://github.com/r94l/aws-fullstack-devops/actions)
 [![Terraform](https://img.shields.io/badge/IaC-Terraform-7B42BC?logo=terraform&logoColor=white)](https://www.terraform.io/)
 [![AWS](https://img.shields.io/badge/Cloud-AWS-FF9900?logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
 [![Docker](https://img.shields.io/badge/Runtime-Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
@@ -14,16 +14,16 @@
 
 ## 📌 The Philosophy Behind This Project
 
-The cloud-native community often defaults to Kubernetes for any containerised workload. While Kubernetes is a powerful orchestration platform, it introduces significant operational complexity, cost, and a steep learning curve — challenges that are unnecessary for many real-world workloads.
+The cloud-native community often defaults to Kubernetes for any containerized workload. While Kubernetes is a powerful orchestration platform, it introduces significant operational complexity, cost and a steep learning curve. Challenges that are unnecessary for many real-world workloads.
 
 **This project makes the case that:**
 
 - A well-architected Docker Compose setup running on a single EC2 instance can serve most early-stage and mid-size applications reliably
 - Production-grade DevOps practices (CI/CD, IaC, secrets management, health checks, zero-downtime deployments) are not exclusive to Kubernetes
 - Infrastructure spend can be significantly reduced without compromising on security, automation, or reliability
-- The architecture is deliberately designed to be **Kubernetes-ready** when the time comes — the same container images, the same CI/CD pipeline, the same secrets patterns all transfer directly
+- The architecture is deliberately designed to be **Kubernetes-ready** when the time comes, the same container images, the same CI/CD pipeline, the same secrets patterns all transfer directly
 
-> **When you are ready to scale** — swap Docker Compose for a managed Kubernetes service (EKS, GKE, AKS), attach your existing ECR images, and migrate your secrets to match. The hard work is already done.
+> **When you are ready to scale** — swap Docker Compose for a managed Kubernetes service (EKS, GKE, AKS), attach your existing ECR images and migrate your secrets to match. The hard work is already done.
 
 ---
 
@@ -31,50 +31,50 @@ The cloud-native community often defaults to Kubernetes for any containerised wo
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        Developer Workflow                        │
-│                                                                  │
+│                        Developer Workflow                       │
+│                                                                 │
 │   feature/* branch                                              │
-│        │                                                         │
-│        ▼                                                         │
+│        │                                                        │
+│        ▼                                                        │
 │   Pull Request ──► CI Pipeline (GitHub-hosted runner)           │
 │        │               ├── Lint & Test Backend                  │
 │        │               ├── Lint & Test Frontend                 │
 │        │               └── Build & Validate Docker Images       │
-│        │                                                         │
-│   Merge to main                                                  │
-│        │                                                         │
-│        ▼                                                         │
-│   CD Pipeline ──► Build Images ──► Push to ECR                 │
-│        │                                                         │
+│        │                                                        │
+│   Merge to main                                                 │
+│        │                                                        │
+│        ▼                                                        │
+│   CD Pipeline ──► Build Images ──► Push to ECR                  │
+│        │                                                        │
 │        └──► SSH into EC2 ──► Pull Images ──► docker compose up  │
 └─────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────┐
-│                        AWS Infrastructure                        │
-│                                                                  │
+│                        AWS Infrastructure                       │
+│                                                                 │
 │   Route 53 / nip.io (DNS)                                       │
-│        │                                                         │
-│        ▼                                                         │
+│        │                                                        │
+│        ▼                                                        │
 │   EC2 t3.micro (Ubuntu 24.04)                                   │
 │   ┌─────────────────────────────────────────────────────┐       │
-│   │  Docker Compose Orchestration                        │       │
-│   │                                                      │       │
+│   │  Docker Compose Orchestration                       │       │
+│   │                                                     │       │  
 │   │  ┌──────────┐    ┌──────────┐    ┌──────────┐       │       │
 │   │  │  Nginx   │───►│ Frontend │    │  Backend │       │       │
 │   │  │ :80/:443 │    │  React   │    │ Node.js  │       │       │
 │   │  │  Proxy   │───►│  :80     │    │  :3000   │       │       │
 │   │  └──────────┘    └──────────┘    └────┬─────┘       │       │
-│   │                                        │             │       │
-│   │                                   ┌────▼─────┐       │       │
-│   │                                   │PostgreSQL│       │       │
-│   │                                   │  :5432   │       │       │
-│   │                                   └──────────┘       │       │
+│   │                                       │             │       │
+│   │                                  ┌────▼─────┐       │       │
+│   │                                  │PostgreSQL│       │       │
+│   │                                  │  :5432   │       │       │
+│   │                                  └──────────┘       │       │
 │   └─────────────────────────────────────────────────────┘       │
-│                                                                  │
+│                                                                 │
 │   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
-│   │     ECR      │  │   Secrets    │  │  S3 + DynamoDB│         │
-│   │  (Images)    │  │   Manager    │  │ (Terraform    │         │
-│   │              │  │  (Secrets)   │  │   State)      │         │
+│   │     ECR      │  │   Secrets    │  │  S3 + DynamoD│          │
+│   │  (Images)    │  │   Manager    │  │ (Terraform   │          │
+│   │              │  │  (Secrets)   │  │   State)     │          │
 │   └──────────────┘  └──────────────┘  └──────────────┘          │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -103,7 +103,7 @@ The cloud-native community often defaults to Kubernetes for any containerised wo
 ## 📁 Project Structure
 
 ```
-conduit-devops/
+aws-fullstack-devops/
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml                 # CI — runs on every push and PR
@@ -149,8 +149,8 @@ This project follows a **zero secrets on disk** approach. No `.env` files exist 
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                   Secrets by Location                    │
-│                                                          │
+│                   Secrets by Location                   │
+│                                                         │
 │  GitHub Secrets          AWS Secrets Manager            │
 │  ─────────────           ─────────────────────          │
 │  AWS_ACCESS_KEY_ID       POSTGRES_USER                  │
@@ -161,7 +161,7 @@ This project follows a **zero secrets on disk** approach. No `.env` files exist 
 │  EC2_HOST                                               │
 │  EC2_USER                                               │
 │  EC2_SSH_KEY                                            │
-│                                                          │
+│                                                         │
 │  Used by: GitHub Actions  Used by: EC2 at runtime       │
 │  during CI/CD pipeline    via IAM role (no credentials) │
 └─────────────────────────────────────────────────────────┘
@@ -325,8 +325,8 @@ terraform destroy
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOURUSERNAME/conduit-devops.git
-cd conduit-devops
+git clone https://github.com/r94l/aws-fullstack-docker.git
+cd aws-fullstack-docker
 
 # Copy environment template
 cp .env.example .env
@@ -370,7 +370,7 @@ terraform init && terraform apply
 
 # Step 7 — Clone repo on EC2 (one time only)
 ssh -i keypair.pem ubuntu@YOUR_EC2_IP
-git clone https://github.com/YOURUSERNAME/conduit-devops.git /home/ubuntu/conduit-devops
+git clone https://github.com/r94l/aws-fullstack-docker.git /home/ubuntu/aws-fullstack-docker
 
 # Step 8 — Push to main to trigger first deployment
 git push origin main
@@ -655,11 +655,10 @@ terraform destroy
 
 ## 👤 Author
 
-Built by **[Your Name]** — DevOps and Cloud Engineer
+Built by **[Raheem Shonubi]** — DevOps and Cloud Engineer
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?logo=linkedin)](https://linkedin.com/in/YOURPROFILE)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?logo=github)](https://github.com/YOURUSERNAME)
-[![X](https://img.shields.io/badge/X-Follow-000000?logo=x)](https://x.com/YOURHANDLE)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?logo=linkedin)](https://linkedin.com/in/abdulraheem-shonubi)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?logo=github)](https://github.com/r94l)
 
 ---
 
