@@ -3,8 +3,6 @@
 > **Proving that not every production workload needs Kubernetes.**
 > This project demonstrates how startups and growing teams can run secure, scalable, fully automated containerized applications on AWS using Docker Compose cutting infrastructure costs while maintaining production-grade DevOps standards
 
-[![CI Pipeline](https://img.shields.io/github/actions/workflow/status/r94l/aws-fullstack-devops/ci.yml?branch=main&label=CI&logo=github-actions&logoColor=white)](https://github.com/r94l/aws-fullstack-devops/actions)
-[![CD Pipeline](https://img.shields.io/github/actions/workflow/status/r94l/aws-fullstack-devops/cd.yml?branch=main&label=CD&logo=github-actions&logoColor=white)](https://github.com/r94l/aws-fullstack-devops/actions)
 [![Terraform](https://img.shields.io/badge/IaC-Terraform-7B42BC?logo=terraform&logoColor=white)](https://www.terraform.io/)
 [![AWS](https://img.shields.io/badge/Cloud-AWS-FF9900?logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
 [![Docker](https://img.shields.io/badge/Runtime-Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
